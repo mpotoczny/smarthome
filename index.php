@@ -1,5 +1,5 @@
+<!-- RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]> -->    
+
 <?php
 
-$url = $_GET['url'];
-echo $url;
 
