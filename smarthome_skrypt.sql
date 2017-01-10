@@ -18,7 +18,7 @@ USE `smarthome` ;
 -- Table `smarthome`.`uzytkownik`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `smarthome`.`uzytkownik` (
-  `id_uzytkownika` INT(11) NOT NULL,
+  `id_uzytkownika` INT(11) NOT NULL AUTO_INCREMENT,
   `login` VARCHAR(45) NOT NULL,
   `imie` VARCHAR(45) NOT NULL,
   `email` VARCHAR(100) NOT NULL,
@@ -30,21 +30,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `smarthome`.`urzadzenia`
+-- Table `smarthome`.`typy_urzadzen`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `smarthome`.`urzadzenia` (
-  `id_urzadzenia` INT(11) NOT NULL AUTO_INCREMENT,
-  `nazwa_urzadzenia` VARCHAR(90) NOT NULL,
-  `szczegoly_urzadzenia` VARCHAR(90) NULL,
-  PRIMARY KEY (`id_urzadzenia`),
-  UNIQUE INDEX `nazwa_urz_UNIQUE` (`nazwa_urzadzenia` ASC))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `smarthome`.`typ_urzadzenia`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `smarthome`.`typ_urzadzenia` (
+CREATE TABLE IF NOT EXISTS `smarthome`.`typy_urzadzen` (
   `id_typu` INT(11) NOT NULL AUTO_INCREMENT,
   `nazwa_typu` VARCHAR(90) NOT NULL,
   `szczegoly_typu` VARCHAR(90) NULL,
@@ -53,10 +41,29 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `smarthome`.`urzadzenia`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `smarthome`.`urzadzenia` (
+  `id_urzadzenia` INT(11) NOT NULL AUTO_INCREMENT,
+  `nazwa_urzadzenia` VARCHAR(90) NOT NULL,
+  `szczegoly_urzadzenia` VARCHAR(90) NULL,
+  `typy_urzadzen_id_typu` INT(11) NOT NULL,
+  PRIMARY KEY (`id_urzadzenia`, `typy_urzadzen_id_typu`),
+  UNIQUE INDEX `nazwa_urz_UNIQUE` (`nazwa_urzadzenia` ASC),
+  INDEX `fk_urzadzenia_typy_urzadzen1_idx` (`typy_urzadzen_id_typu` ASC),
+  CONSTRAINT `fk_urzadzenia_typy_urzadzen1`
+    FOREIGN KEY (`typy_urzadzen_id_typu`)
+    REFERENCES `smarthome`.`typy_urzadzen` (`id_typu`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `smarthome`.`pomieszczenia`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `smarthome`.`pomieszczenia` (
-  `id_pomieszczenia` INT(11) NOT NULL,
+  `id_pomieszczenia` INT(11) NOT NULL AUTO_INCREMENT,
   `nazwa_pomieszczenia` VARCHAR(90) NOT NULL,
   `szczegoly_pomieszczenia` VARCHAR(90) NULL,
   PRIMARY KEY (`id_pomieszczenia`))
@@ -64,18 +71,18 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `smarthome`.`pomiar`
+-- Table `smarthome`.`pomiary`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `smarthome`.`pomiar` (
+CREATE TABLE IF NOT EXISTS `smarthome`.`pomiary` (
   `id_pomiaru` INT(11) NOT NULL AUTO_INCREMENT,
   `szczegoly_pomiaru` VARCHAR(90) NULL,
+  `wartosc` INT(11) NOT NULL,
+  `czas_pomiaru` TIMESTAMP NOT NULL,
   `pomieszczenia_id_pomieszczenia` INT(11) NOT NULL,
-  `typ_urzadzenia_id_typu` INT(11) NOT NULL,
   `urzadzenia_id_urzadzenia` INT(11) NOT NULL,
-  PRIMARY KEY (`id_pomiaru`, `pomieszczenia_id_pomieszczenia`, `typ_urzadzenia_id_typu`, `urzadzenia_id_urzadzenia`),
+  PRIMARY KEY (`id_pomiaru`, `pomieszczenia_id_pomieszczenia`, `urzadzenia_id_urzadzenia`),
   INDEX `fk_pomiar_urzadzenia1_idx` (`urzadzenia_id_urzadzenia` ASC),
   INDEX `fk_pomiar_pomieszczenia1_idx` (`pomieszczenia_id_pomieszczenia` ASC),
-  INDEX `fk_pomiar_typ_urzadzenia1_idx` (`typ_urzadzenia_id_typu` ASC),
   CONSTRAINT `fk_pomiar_urzadzenia1`
     FOREIGN KEY (`urzadzenia_id_urzadzenia`)
     REFERENCES `smarthome`.`urzadzenia` (`id_urzadzenia`)
@@ -84,11 +91,6 @@ CREATE TABLE IF NOT EXISTS `smarthome`.`pomiar` (
   CONSTRAINT `fk_pomiar_pomieszczenia1`
     FOREIGN KEY (`pomieszczenia_id_pomieszczenia`)
     REFERENCES `smarthome`.`pomieszczenia` (`id_pomieszczenia`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pomiar_typ_urzadzenia1`
-    FOREIGN KEY (`typ_urzadzenia_id_typu`)
-    REFERENCES `smarthome`.`typ_urzadzenia` (`id_typu`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -107,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `smarthome`.`dane_pomiaru` (
   INDEX `fk_dane_pomiaru_pomiar1_idx` (`pomiar_id_pomiaru` ASC),
   CONSTRAINT `fk_dane_pomiaru_pomiar1`
     FOREIGN KEY (`pomiar_id_pomiaru`)
-    REFERENCES `smarthome`.`pomiar` (`id_pomiaru`)
+    REFERENCES `smarthome`.`pomiary` (`id_pomiaru`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -127,18 +129,19 @@ ENGINE = InnoDB;
 -- Table `smarthome`.`users_roles`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `smarthome`.`users_roles` (
-  `id_uzytkownika` INT(11) NOT NULL,
   `id_roli` INT(11) NOT NULL,
-  PRIMARY KEY (`id_uzytkownika`, `id_roli`),
+  `id_uzytkownika` INT(11) NOT NULL,
+  PRIMARY KEY (`id_roli`, `id_uzytkownika`),
   INDEX `fk_users_roles_roles1_idx` (`id_roli` ASC),
-  CONSTRAINT `fk_users_roles_uzytkownik1`
-    FOREIGN KEY (`id_uzytkownika`)
-    REFERENCES `smarthome`.`uzytkownik` (`id_uzytkownika`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  INDEX `fk_users_roles_uzytkownik1_idx` (`id_uzytkownika` ASC),
   CONSTRAINT `fk_users_roles_roles1`
     FOREIGN KEY (`id_roli`)
     REFERENCES `smarthome`.`roles` (`id_roli`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_users_roles_uzytkownik1`
+    FOREIGN KEY (`id_uzytkownika`)
+    REFERENCES `smarthome`.`uzytkownik` (`id_uzytkownika`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
