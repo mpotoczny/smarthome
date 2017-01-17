@@ -1,0 +1,7 @@
+Wymagania niefunkcjonalne tworzonej aplikacji to:
+-u¿ycie jêzyka PHP i wzorca MVC
+-responsywnoœæ
+-podstawowa walidacja wprowadzanych danych
+-wykorzystanie bazy danych MySQL (po³¹czenie PDO)
+-publikowanie plików w systemie GitHub - nazwa repozytorium: smarthome, adres: https://github.com/mpotoczny/smarthome
+-zahostowanie aplikacji w sieci - http://thesmarthome.cba.pl/
