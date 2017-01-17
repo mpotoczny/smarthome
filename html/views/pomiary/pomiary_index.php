@@ -8,7 +8,7 @@
 <div class="table-responsive">
     <table class="table table-bordered table-hover">
         <tr>
-            <th>Id pomiaru</th><!--<th>Szczegóły pomiaru--></th><th>Wartość</th><th>Nazwa urządzenia</th> <th>Czas pomiaru</th><th>Nazwa pomieszczenia</th>                                                                  
+            <th>Id pomiaru</th><!--<th>Szczegóły pomiaru--></th><th>Wartość/Stan</th><th>Nazwa urządzenia</th> <th>Czas pomiaru</th><th>Nazwa pomieszczenia</th>                                                                  
         </tr>
         <?php
           

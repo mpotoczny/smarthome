@@ -32,7 +32,7 @@ class urzadzeniaController extends baseController {
             $urzadzenie->setTypy_Urzadzen_Id_Typu($row['typy_urzadzen_id_typu']);
             $typ_urzadzenia = $db::getTypyUrzadzenById($row['typy_urzadzen_id_typu']);
             $urzadzenie->setTyp_Urzadzenia($typ_urzadzenia);
-            $urzadzenia[] = $urzadzenie; 
+            $urzadzenia[] = $urzadzenie;        
         }
 
 	$typy_urzadzen = array();

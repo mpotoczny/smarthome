@@ -336,7 +336,13 @@ Class Database {
      public static function getUrzadzeniaList() {
         $stmt = self::$db->query('SELECT * FROM urzadzenia');
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }   
+    }
+    
+     public static function getUrzadzeniaListByTyp($id_typu) {
+        $stmt = self::$db->prepare('SELECT * FROM urzadzenia WHERE typy_urzadzen_id_typu=?');
+         $stmt->execute(array($id_typu));
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }    
 
         public static function getUrzadzenieByNazwa($nazwa_urzadzenia) {
         $stmt = self::$db->prepare('SELECT * FROM urzadzenia WHERE nazwa_urzadzenia=?');
@@ -371,6 +377,34 @@ Class Database {
             return $typ_urzadzen;
         }
     }
+        public static function getTypyUrzadzenById($id_typu) {
+                $stmt = self::$db->query("SELECT * FROM typy_urzadzen WHERE id_typu='$id_typu'");
+              //  $stmt->execute(array($login));
+              //  if ($stmt->rowCount() > 0) {
+                    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $result = $results[0];
+                    $typ_urzadzen = new Typy_urzadzen();
+                    $typ_urzadzen->setId_Typu($result['id_typu']);
+                    $typ_urzadzen->setNazwa_Typu($result['nazwa_typu']);
+                    $typ_urzadzen->setSzczegoly_Typu($result['szczegoly_typu']);
+                    return $typ_urzadzen;
+                //}
+            }     
+    
+     public static function getTypyUrzadzenById1($id) {
+        $stmt = self::$db->prepare('SELECT * FROM typy_urzadzen WHERE id_typu=?');
+        $stmt->execute(array($id));
+        //if ($stmt->rowCount() > 0) {
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $result = $results[0];
+            $typ_urzadzenia = new Typy_urzadzen();
+            $typ_urzadzenia->setId_Typu($result['id_typu']);
+            $typ_urzadzenia->setNazwa_Typu($result['nazwa_typu']);
+            $typ_urzadzenia->setSzczegoly_Typu($result['szczegoly_typu']);
+            return $typ_urzadzenia;
+       // }
+    }   
+    
 
     //dodanie urzadzenia
     public static function addTypyUrzadzen($typ_urzadzen) {
@@ -414,19 +448,7 @@ Class Database {
             return FALSE;
         } 
     
-        public static function getTypyUrzadzenById($id_typu) {
-                $stmt = self::$db->query("SELECT * FROM typy_urzadzen WHERE id_typu='$id_typu'");
-              //  $stmt->execute(array($login));
-              //  if ($stmt->rowCount() > 0) {
-                    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    $result = $results[0];
-                    $typ_urzadzen = new Typy_urzadzen();
-                    $typ_urzadzen->setId_Typu($result['id_typu']);
-                    $typ_urzadzen->setNazwa_Typu($result['nazwa_typu']);
-                    $typ_urzadzen->setSzczegoly_Typu($result['szczegoly_typu']);
-                    return $typ_urzadzen;
-                //}
-            }    
+   
         
             //POMIARY
 

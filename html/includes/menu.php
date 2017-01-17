@@ -71,11 +71,11 @@ if (!empty($login)) {
                 </button>
                 <a class="navbar-brand" href="/<?= APP_ROOT ?>">STRONA GŁÓWNA</a>
             </div>
-            <div id="navbar" class="collapse navbar-collapse">
+   <!--         <div id="navbar" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                       <li><a href="/<?= APP_ROOT ?>/kontakt">Kontakt z administratorem</a></li>
                 </ul>
-            </div><!--/.nav-collapse -->
+            </div><!--/.nav-collapse --> 
         </div>
     </nav>
     <?php } ?>

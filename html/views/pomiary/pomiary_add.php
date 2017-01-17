@@ -20,7 +20,7 @@ else if (!empty($success)) {  ?>
 -->    
 
 <div class="form-group">
-        <label>Wartość</label>
+        <label>Wartość/Stan</label>
         <input type="text" name="wartosc" class="form-control" /> 
     </div>
     <div class="form-group">

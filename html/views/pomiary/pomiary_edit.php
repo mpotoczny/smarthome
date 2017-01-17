@@ -25,7 +25,7 @@ if (!empty($model)) {
     <div class="form-group">
        
 
-    <label>Wartość </label>
+    <label>Wartość/Stan </label>
     <input class="form-control" type="text" name="wartosc" value="<?= $wartosc ?>"/>
     <input type="hidden" name="id" value="<?= $id ?>" />  
     </div>    
